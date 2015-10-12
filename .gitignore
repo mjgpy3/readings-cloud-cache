@@ -4,5 +4,3 @@ local
 lib
 
 pip-selfcheck.json
-
-*.py[c|o]
