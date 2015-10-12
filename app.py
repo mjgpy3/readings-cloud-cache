@@ -9,4 +9,6 @@ def hello_world():
     return 'Hello World!'
 
 if __name__ == '__main__':
-    app.run(port=argv[1])
+    print "HELLO WORLD"
+    print argv
+    app.run()
