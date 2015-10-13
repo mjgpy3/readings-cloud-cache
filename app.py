@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from flask import Flask, request
-from flask.ext.cors import CORS
+from flask.ext.cors import cross_origin
 from sys import argv
 import pg8000
 import urlparse
