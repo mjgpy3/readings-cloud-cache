@@ -40,7 +40,7 @@ def build_connection(connector, pg_url):
 def hello_world():
     return 'Hello World!'
 
-@app.route('/read', methods=['POST'])
+@app.route('/read', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def create_read():
     data = json.loads(request.data)
