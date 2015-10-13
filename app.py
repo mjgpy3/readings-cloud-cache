@@ -7,11 +7,14 @@ import urlparse
 import os
 app = Flask(__name__)
 
-def build_connection():
+# TODO: Wire with
+# pg8000.connect
+# os.environ["DATABASE_URL"]
+def build_connection(connector, pg_url):
     urlparse.uses_netloc.append("postgres")
-    url = urlparse.urlparse(os.environ["DATABASE_URL"])
+    url = urlparse.urlparse(pg_url)
 
-    conn = psycopg2.connect(
+    conn = connector.connect(
         database=url.path[1:],
         user=url.username,
         password=url.password,
