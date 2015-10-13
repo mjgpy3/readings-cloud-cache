@@ -7,7 +7,16 @@ import urlparse
 import os
 import json
 import urllib
+import hashlib
 app = Flask(__name__)
+
+def auth(key):
+    m = hashlib.md5()
+    m.update(key + os.environ['KEY_SALT'])
+    d = m.hexdigest()
+
+    if d != os.environ['CORRECT_KEY']:
+        raise Exception, 'Auth failed!'
 
 def make_connection():
     return build_connection(pg8000, os.environ['DATABASE_URL'])
@@ -33,9 +42,12 @@ def hello_world():
 @app.route('/read', methods=['POST'])
 def create_read():
     data = json.loads(request.data)
+    auth(data.get('key', ''))
+
     connection = make_connection()
     cursor = connection.cursor()
     url = urllib.unquote(data['url'])
+
 
     cursor.execute('INSERT INTO read (url, created_at) VALUES (\'%s\', now())' % data['url'])
 
