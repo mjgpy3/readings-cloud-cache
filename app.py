@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from flask import Flask, request
+from flask.ext.cors import CORS
 from sys import argv
 import pg8000
 import urlparse
@@ -40,6 +41,7 @@ def hello_world():
     return 'Hello World!'
 
 @app.route('/read', methods=['POST'])
+@cross_origin()
 def create_read():
     data = json.loads(request.data)
     auth(data.get('key', ''))
