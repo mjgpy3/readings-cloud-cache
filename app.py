@@ -40,7 +40,7 @@ def create_read():
     cursor.execute('INSERT INTO read (url, created_at) VALUES (\'%s\', now())' % data['url'])
 
     try:
-        cursor.commit()
+        connection.commit()
     except Exception as e:
         print e
 
