@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
-from flask import Flask
+from flask import Flask, request
 from sys import argv
 import pg8000
 import urlparse
 import os
+import json
+import urllib
 app = Flask(__name__)
 
-# TODO: Wire with
-# pg8000.connect
-# os.environ["DATABASE_URL"]
+def make_connection():
+    return build_connection(pg8000, os.environ['DATABASE_URL'])
+
 def build_connection(connector, pg_url):
     urlparse.uses_netloc.append("postgres")
     url = urlparse.urlparse(pg_url)
@@ -28,7 +30,16 @@ def build_connection(connector, pg_url):
 def hello_world():
     return 'Hello World!'
 
+@app.route('/read', methods=['POST'])
+def create_read():
+    data = json.loads(request.data)
+    connection = make_connection()
+    cursor = connection.cursor()
+    url = urllib.unquote(data['url'])
+
+    cursor.execute('INSERT INTO read (url, created_at) VALUES (\'%s\', now())' % data['url'])
+
+    return 'create read'
+
 if __name__ == '__main__':
-    print "HELLO WORLD"
-    print argv
-    app.run()
+    app.run(debug=True)
