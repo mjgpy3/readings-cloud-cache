@@ -39,6 +39,8 @@ def create_read():
 
     cursor.execute('INSERT INTO read (url, created_at) VALUES (\'%s\', now())' % data['url'])
 
+    cursor.commit()
+
     return 'create read'
 
 if __name__ == '__main__':
