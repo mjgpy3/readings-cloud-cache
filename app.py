@@ -41,8 +41,8 @@ def create_read():
 
     try:
         cursor.commit()
-    except a:
-        print a
+    except Exception as e:
+        print e
 
     return 'create read'
 
