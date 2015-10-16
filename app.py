@@ -11,6 +11,12 @@ import urllib
 import hashlib
 app = Flask(__name__)
 
+UNSAFE_STRS = ['/*', "'", ' ', '\n', '\r', '\t']
+
+def assert_safe_url(url):
+    assert ((url.startswith('http://') or url.startswith('https://')) and
+           sum(1 for i in UNSAFE_STRS if i in url) == 0)
+
 def auth(key):
     m = hashlib.md5()
     m.update(key + os.environ['KEY_SALT'])
@@ -45,10 +51,10 @@ def hello_world():
 def create_read():
     data = json.loads(request.data)
     auth(data.get('key', ''))
+    assert_safe_url(data['url'])
 
     connection = make_connection()
     cursor = connection.cursor()
-    url = urllib.unquote(data['url'])
 
 
     cursor.execute('INSERT INTO read (url, created_at) VALUES (\'%s\', now())' % data['url'])

@@ -2,7 +2,45 @@
 
 import unittest
 
-from app import build_connection
+from app import build_connection, assert_safe_url
+
+class TestAssertValidUrl(unittest.TestCase):
+    def test_given_a_valid_http_url_it_does_nothing(self):
+        assert_safe_url('http://www.example.com')
+
+    def test_given_a_valid_https_url_it_does_nothing(self):
+        assert_safe_url('https://www.example.com')
+
+    def test_given_a_valid_longer_url_it_does_nothing(self):
+        assert_safe_url('https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#safe=off&q=example+long+url')
+
+    def test_it_errors_when_given_a_url_not_beginning_with_a_valid_scheme(self):
+        with self.assertRaises(AssertionError):
+            assert_safe_url('ftp://www.example.com')
+
+    def test_it_errors_when_given_a_url_with_a_comment_beginning_in_it(self):
+        with self.assertRaises(AssertionError):
+            assert_safe_url('http://www.example.com/*')
+
+    def test_it_errors_when_given_a_url_with_a_single_quote(self):
+        with self.assertRaises(AssertionError):
+            assert_safe_url('http://www.example.\'com/')
+
+    def test_it_errors_when_given_a_url_with_a_space(self):
+        with self.assertRaises(AssertionError):
+            assert_safe_url('http://www.example.com/ /foobar')
+
+    def test_it_errors_when_given_a_url_with_a_newline(self):
+        with self.assertRaises(AssertionError):
+            assert_safe_url('http://www.example.com/\n/foobar')
+
+    def test_it_errors_when_given_a_url_with_a_cr(self):
+        with self.assertRaises(AssertionError):
+            assert_safe_url('http://www.example.com/\r/foobar')
+
+    def test_it_errors_when_given_a_url_with_a_tab(self):
+        with self.assertRaises(AssertionError):
+            assert_safe_url('http://www.example.com/\t/foobar')
 
 class TestConnectionBuilder(unittest.TestCase):
     def setUp(self):
