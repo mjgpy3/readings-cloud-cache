@@ -46,6 +46,18 @@ def build_connection(connector, pg_url):
 def hello_world():
     return 'Hello World!'
 
+@app.route('/read', methods=['GET'])
+def get_read_all():
+    connection = make_connection()
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT url FROM read LIMIT 10;')
+
+    urls = cursor.fetchall()
+    result = '<ol>%s</ol>' % ''.join('<li>' + url + '</li>' for url in urls)
+
+    connection.commit()
+
 @app.route('/read', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def create_read():
@@ -55,7 +67,6 @@ def create_read():
 
     connection = make_connection()
     cursor = connection.cursor()
-
 
     cursor.execute('INSERT INTO read (url, created_at) VALUES (\'%s\', now())' % data['url'])
 
