@@ -44,6 +44,7 @@ def build_connection(connector, pg_url):
 
 @app.route('/')
 def hello_world():
+    print 'anyone there?'
     return 'Hello World!'
 
 @app.route('/read', methods=['GET'])
@@ -53,16 +54,21 @@ def get_read_all():
 
     cursor.execute('SELECT url FROM read LIMIT 10;')
 
+    print 'ran query'
     urls = cursor.fetchall()
+    print 'fetched'
     result = '<ol>%s</ol>' % ''.join('<li>' + url + '</li>' for url in urls)
+    print 'joined result'
 
     connection.commit()
+    print 'committed'
 
     return result
 
 @app.route('/read', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def create_read():
+    print 'in create'
     data = json.loads(request.data)
     auth(data.get('key', ''))
     assert_safe_url(data['url'])
