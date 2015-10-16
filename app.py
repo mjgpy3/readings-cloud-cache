@@ -57,7 +57,8 @@ def get_read_all():
     print 'ran query'
     urls = cursor.fetchall()
     print 'fetched'
-    result = '<ol>%s</ol>' % ''.join('<li>' + url + '</li>' for url in urls)
+    print 'result type:', type(urls)
+    result = '<ol>%s</ol>' % ''.join('<li>' + url[0] + '</li>' for url in urls)
     print 'joined result'
 
     connection.commit()
