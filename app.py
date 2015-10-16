@@ -46,8 +46,8 @@ def build_connection(connector, pg_url):
 def hello_world():
     return 'Hello World!'
 
-@app.route('/read', methods=['GET'])
-def get_read_all():
+@app.route('/read/ten', methods=['GET'])
+def get_read_ten():
     connection = make_connection()
     cursor = connection.cursor()
 
