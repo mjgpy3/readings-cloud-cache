@@ -58,6 +58,8 @@ def get_read_all():
 
     connection.commit()
 
+    return result
+
 @app.route('/read', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def create_read():
