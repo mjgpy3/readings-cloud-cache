@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask.ext.cors import cross_origin
 from sys import argv
 import pg8000
@@ -76,7 +76,7 @@ def get_read_all():
             res.append({ 'url': url, 'created_at': created_at })
 
     try:
-        result = flask.jsonify(articles=res)
+        result = jsonify(articles=res)
     except Exception as e:
         print e
 
