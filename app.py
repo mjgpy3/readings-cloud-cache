@@ -75,7 +75,10 @@ def get_read_all():
             url, created_at = result
             res.append({ 'url': url, 'created_at': created_at })
 
-    return flask.jsonify(articles=res)
+    result = flask.jsonify(articles=res)
+    print result
+
+    return result
 
 @app.route('/read', methods=['POST', 'OPTIONS'])
 @cross_origin()
