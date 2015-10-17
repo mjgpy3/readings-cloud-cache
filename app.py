@@ -75,9 +75,10 @@ def get_read_all():
             url, created_at = result
             res.append({ 'url': url, 'created_at': created_at })
 
-    print 'jsonifying'
-    result = flask.jsonify(articles=res)
-    print result
+    try:
+        result = flask.jsonify(articles=res)
+    except Exception as e:
+        print e
 
     return result
 
