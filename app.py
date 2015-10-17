@@ -25,6 +25,15 @@ def auth(key):
     if d != os.environ['CORRECT_KEY']:
         raise Exception, 'Auth failed!'
 
+class transact:
+    def __enter__(self):
+        self.connection = make_connection()
+        cursor = self.connection.cursor()
+        return cursor
+
+    def __exit__(self, type, value, traceback):
+        self.connection.commit()
+
 def make_connection():
     return build_connection(pg8000, os.environ['DATABASE_URL'])
 
@@ -48,15 +57,10 @@ def hello_world():
 
 @app.route('/read/ten', methods=['GET'])
 def get_read_ten():
-    connection = make_connection()
-    cursor = connection.cursor()
-
-    cursor.execute('SELECT url FROM read ORDER BY created_at desc LIMIT 10;')
-
-    urls = cursor.fetchall()
-    result = '<ol>%s</ol>' % ''.join('<li>' + url[0] + '</li>' for url in urls)
-
-    connection.commit()
+    with transact() as cursor:
+        cursor.execute('SELECT url FROM read ORDER BY created_at desc LIMIT 10;')
+        urls = cursor.fetchall()
+        result = '<ol>%s</ol>' % ''.join('<li>' + url[0] + '</li>' for url in urls)
 
     return result
 
