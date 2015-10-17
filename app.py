@@ -71,14 +71,10 @@ def create_read():
     auth(data.get('key', ''))
     assert_safe_url(data['url'])
 
-    connection = make_connection()
-    cursor = connection.cursor()
+    with transact() as cursor:
+        cursor.execute('INSERT INTO read (url, created_at) VALUES (\'%s\', now())' % data['url'])
 
-    cursor.execute('INSERT INTO read (url, created_at) VALUES (\'%s\', now())' % data['url'])
-
-    connection.commit()
-
-    return 'create read'
+    return '<h1>reading created</h1>'
 
 if __name__ == '__main__':
     app.run(debug=True)
