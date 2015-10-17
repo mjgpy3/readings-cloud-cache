@@ -69,8 +69,6 @@ def get_read_ten():
 def get_read_all():
     header = request.headers['Authorization']
 
-    auth(header.split('Digest ')[-1])
-
     with transact() as cursor:
         cursor.execute('SELECT url, created_at FROM read ORDER BY created_at desc;')
         res = []
