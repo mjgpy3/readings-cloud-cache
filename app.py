@@ -67,16 +67,19 @@ def get_read_ten():
 @app.route('/read/all', methods=['GET'])
 @cross_origin()
 def get_read_all():
-    header = request.headers['Authorization']
-
     with transact() as cursor:
         cursor.execute('SELECT url, created_at FROM read ORDER BY created_at desc;')
+        print 'got all'
         res = []
         results = cursor.fetchall()
+        print 'fetched'
         for result in results:
             url, created_at = result
+            print 'unboxed'
             res.append({ 'url': url, 'created_at': created_at })
+            print 'added'
 
+    print 'returning'
     return flask.jsonify(res)
 
 @app.route('/read', methods=['POST', 'OPTIONS'])
