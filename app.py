@@ -69,6 +69,7 @@ def get_read_ten():
 def create_read():
     data = json.loads(request.data)
     auth(data.get('key', ''))
+    print request.headers
     assert_safe_url(data['url'])
 
     with transact() as cursor:
