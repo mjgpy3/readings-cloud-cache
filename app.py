@@ -64,12 +64,28 @@ def get_read_ten():
 
     return result
 
+@app.route('/read/all', methods=['GET'])
+@cross_origin()
+def get_read_all():
+    header = request.headers['Authorization']
+
+    auth(header.split('Digest ')[-1])
+
+    with transact() as cursor:
+        cursor.execute('SELECT url, created_at FROM read ORDER BY created_at desc;')
+        res = []
+        results = cursor.fetchall()
+        for result in results:
+            url, created_at = result
+            res.append({ 'url': url, 'created_at': created_at })
+
+    return flask.jsonify(res)
+
 @app.route('/read', methods=['POST', 'OPTIONS'])
 @cross_origin()
 def create_read():
     data = json.loads(request.data)
     auth(data.get('key', ''))
-    print request.headers
     assert_safe_url(data['url'])
 
     with transact() as cursor:
